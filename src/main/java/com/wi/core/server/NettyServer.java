@@ -5,19 +5,22 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import java.net.InetSocketAddress;
+
 
 public class NettyServer {
 
     private final EventLoopGroup boss ;
     private final EventLoopGroup worker;
     private final ServerBootstrap bootstrap;
-
-    public NettyServer(EventLoopGroup boss, EventLoopGroup worker) {
-        this.boss = boss;
-        this.worker = worker;
+    private final Integer port;
+    public NettyServer(Integer port) {
+        this.port = port;
+        this.boss = new NioEventLoopGroup();
+        this.worker = new NioEventLoopGroup();
         this.bootstrap = new ServerBootstrap();
         this.init();
     }
@@ -27,7 +30,7 @@ public class NettyServer {
             bootstrap.group(boss,worker)
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_KEEPALIVE, true)
-                    .localAddress(new InetSocketAddress(8824))
+                    .localAddress(new InetSocketAddress(port))
                     .childHandler(new InitFilter());//保持连接
             ChannelFuture f = bootstrap.bind().sync();
             f.channel().closeFuture().sync();
