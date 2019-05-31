@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class HttpRequestHandler  extends SimpleChannelInboundHandler<FullHttpRequest> {
 
+    @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest fullHttpRequest) throws Exception {
         DefaultFullHttpResponse response =
                 new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,HttpResponseStatus.OK,Unpooled.copiedBuffer("hello man",CharsetUtil.UTF_8));
@@ -21,7 +22,7 @@ public class HttpRequestHandler  extends SimpleChannelInboundHandler<FullHttpReq
                 HttpResponseStatus.CONTINUE));
         // 获取请求的uri
         String uri = req.uri();
-        Map<String,String> resMap = new HashMap<>();
+        Map<String,String> resMap = new HashMap<String, String>();
         resMap.put("method",req.method().name());
         resMap.put("uri",uri);
         String msg = "<html><head><title>test</title></head><body>你请求uri为：" + uri+"</body></html>";
